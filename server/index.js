@@ -10,6 +10,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import { register } from "./controllers/auth.js";
+import clientRoutes from "./routes/client.js";
+import generalRoutes from "./routes/general.js";
+import managementRoutes from "./routes/management.js";
+import donationsRoutes from "./routes/donation.js";
 
 //Configs
 const __filename = fileURLToPath(import.meta.url);
@@ -46,7 +50,7 @@ app.use("/auth", authRoutes);
 app.use("/client", clientRoutes);
 app.use("/general", generalRoutes);
 app.use("/management", managementRoutes);
-app.use("/donations", dontaionRoutes);
+app.use("/donations", donationsRoutes);
 
 //Mongoose setup
 const PORT = process.env.PORT || 6001;
