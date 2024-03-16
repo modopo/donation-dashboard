@@ -9,8 +9,9 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/user.js";
 import { register } from "./controllers/auth.js";
-import clientRoutes from "./routes/client.js";
+import distributionsRoutes from "./routes/distributions.js";
 import generalRoutes from "./routes/general.js";
 import managementRoutes from "./routes/management.js";
 import donationsRoutes from "./routes/donation.js";
@@ -47,10 +48,11 @@ app.post("/auth/register", upload.single("picture"), register);
 
 //Routes
 app.use("/auth", authRoutes);
-app.use("/client", clientRoutes);
+app.use("/users", userRoutes);
 app.use("/general", generalRoutes);
-app.use("/management", managementRoutes);
 app.use("/donations", donationsRoutes);
+app.use("/distributions", distributionsRoutes);
+app.use("/management", managementRoutes);
 
 //Mongoose setup
 const PORT = process.env.PORT || 6001;
