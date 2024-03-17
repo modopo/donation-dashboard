@@ -25,8 +25,8 @@ const UserSchema = new mongoose.Schema(
       default: "staff",
     },
     donations: {
-      type: Array,
-      default: [],
+      type: [mongoose.Types.ObjectId],
+      ref: "Donation",
     },
   },
   { timestamps: true },
