@@ -70,3 +70,22 @@ export const updateDonation = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+//DELETE donation
+export const deleteDonation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { donationId } = req.body;
+    const user = await User.findById(id);
+
+    if (!user || user.role !== "admin") {
+      res.status(403).json({ message: "Forbidden" });
+      return;
+    }
+
+    await Donation.deleteOne({ _id: donationId });
+    res.status(200).redirect("/");
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
