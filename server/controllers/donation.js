@@ -1,7 +1,7 @@
 import User from "../models/User";
 import Donation from "../models/Donation";
 
-//Read donations
+//GET donations
 export const getStaffRecordedDonations = async (req, res) => {
   try {
     const { id } = req.params;
@@ -19,6 +19,14 @@ export const getStaffRecordedDonations = async (req, res) => {
 
 export const getAllDonations = async (req, res) => {
   try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+
+    if (!user || user.role !== "admin") {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
+
     const donations = await Donation.find();
     res.status(200).json(donations);
   } catch (error) {
@@ -29,7 +37,8 @@ export const getAllDonations = async (req, res) => {
 //POST donations
 export const addDonation = async (req, res) => {
   try {
-    const { id, donorName, donations } = req.params;
+    const { id } = req.params;
+    const { donorName, donations } = req.body;
     const user = await User.findById(id);
     const newDonation = new Donation({
       donorName: donorName,
@@ -42,5 +51,22 @@ export const addDonation = async (req, res) => {
     res.status(201).json(saved);
   } catch (error) {
     res.status(409).json({ message: error.messsage });
+  }
+};
+
+//UPDATE donations
+export const updateDonation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { donorName, donations } = req.body;
+    const update = await Donation.findById(id);
+
+    update.donorName = donorName;
+    update.donation = donations;
+    await update.save();
+
+    res.status(200).json(update);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
   }
 };
