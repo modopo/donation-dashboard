@@ -5,6 +5,7 @@ import {
   addDonation,
   updateDonation,
 } from "../controllers/donation.js";
+import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 

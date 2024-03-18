@@ -1,6 +1,4 @@
-import User from "../models/User";
-import Donation from "../models/Donation";
-import Distribution from "../models/Distribution";
+import User from "../models/User.js";
 
 //READ
 export const getUser = async (req, res) => {
