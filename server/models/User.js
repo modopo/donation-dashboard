@@ -27,6 +27,12 @@ const UserSchema = new mongoose.Schema(
     donations: {
       type: [mongoose.Types.ObjectId],
       ref: "Donation",
+      default: [],
+    },
+    distributions: {
+      type: [mongoose.Types.ObjectId],
+      ref: "Distribuion",
+      default: [],
     },
   },
   { timestamps: true },
