@@ -11,7 +11,9 @@ const DonationSchema = new mongoose.Schema(
     donation: {
       items: [
         {
-          enum: ["food", "cash", "items"],
+          type: {
+            enum: ["food", "cash", "items"],
+          },
           itemName: String,
           quantity: Number,
         },
