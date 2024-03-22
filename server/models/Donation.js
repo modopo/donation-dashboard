@@ -9,7 +9,16 @@ const DonationSchema = new mongoose.Schema(
       maxlength: 50,
     },
     donation: {
-      type: Array,
+      type: [
+        {
+          type: {
+            type: String,
+            enum: ["food", "item", "cash"],
+          },
+          itemName: String,
+          quantity: Number,
+        },
+      ],
       default: [],
     },
   },
