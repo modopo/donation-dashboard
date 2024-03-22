@@ -38,14 +38,16 @@ export const getAllDonations = async (req, res) => {
 export const addDonation = async (req, res) => {
   try {
     const { id } = req.params;
-    const { donorName, donations } = req.body;
-    const user = await User.findById(id);
+    const { donorName, donation } = req.body;
+    console.log(donation);
     const newDonation = new Donation({
       donorName: donorName,
-      donation: donations,
+      donation: [...donation],
     });
+
     const saved = await newDonation.save();
 
+    const user = await User.findById(id);
     user.donations.push(saved._id);
     await user.save();
     res.status(201).json(saved);
