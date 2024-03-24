@@ -6,6 +6,8 @@ import User from "../models/User.js";
 export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+    let user = await User.findOne({ email });
+    if (user) return res.status(400).send("Already registered");
 
     const salt = await bcrypt.genSalt();
     const passHash = await bcrypt.hash(password, salt);

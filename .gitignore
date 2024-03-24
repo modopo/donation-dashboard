@@ -131,3 +131,4 @@ dist
 
 # REST test folder
 hurl/
+vars.env

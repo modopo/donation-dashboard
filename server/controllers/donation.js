@@ -23,8 +23,7 @@ export const getAllDonations = async (req, res) => {
     const user = await User.findById(id);
 
     if (!user || user.role !== "admin") {
-      res.status(401).json({ message: "Unauthorized" });
-      return;
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     const donations = await Donation.find();
@@ -81,8 +80,7 @@ export const deleteDonation = async (req, res) => {
     const user = await User.findById(id);
 
     if (!user || user.role !== "admin") {
-      res.status(403).json({ message: "Forbidden" });
-      return;
+      return res.status(403).json({ message: "Forbidden" });
     }
 
     await Donation.deleteOne({ _id: donationId });
