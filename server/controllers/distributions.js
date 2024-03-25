@@ -42,7 +42,7 @@ export const addDistribution = async (req, res) => {
     const user = await User.findById(id);
     const newDistribution = new Distribution({
       authorizedBy: authorizedBy,
-      distribution: distribution,
+      distribution: [...distribution],
     });
     const saved = await newDistribution.save();
 
@@ -74,15 +74,16 @@ export const updateDistribution = async (req, res) => {
 //DELETE distribution
 export const deleteDistribution = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { distributionId } = req.body;
+    const { id, distributionId } = req.params;
     const user = await User.findById(id);
-
     if (!user || user.role !== "admin") {
       res.status(403).json({ message: "Forbidden" });
     }
 
     await Distribution.deleteOne({ _id: distributionId });
+    const distributionUser = await User.find({ distribuions: distributionId });
+    distributionUser[0].distributions.pull(distributionId);
+    await distributionUser[0].save();
     res.status(200).redirect("/");
   } catch (error) {
     res.status(404).json({ message: error.message });

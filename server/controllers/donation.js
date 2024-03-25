@@ -38,7 +38,6 @@ export const addDonation = async (req, res) => {
   try {
     const { id } = req.params;
     const { donorName, donation } = req.body;
-    console.log(donation);
     const newDonation = new Donation({
       donorName: donorName,
       donation: [...donation],
