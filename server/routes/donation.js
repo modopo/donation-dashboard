@@ -4,6 +4,7 @@ import {
   getAllDonations,
   addDonation,
   updateDonation,
+  deleteDonation,
 } from "../controllers/donation.js";
 import { verifyToken } from "../middleware/auth.js";
 
@@ -17,6 +18,9 @@ router.get("/:id/donationList", verifyToken, getAllDonations);
 router.post("/:id/addDonation", verifyToken, addDonation);
 
 //UPDATE
-router.patch("/:id/updateDonation", verifyToken, updateDonation);
+router.patch("/:id/:donationId/update", verifyToken, updateDonation);
+
+//DELETE
+router.get("/:id/:donationId/delete", verifyToken, deleteDonation);
 
 export default router;

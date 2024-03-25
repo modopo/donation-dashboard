@@ -58,9 +58,9 @@ export const addDonation = async (req, res) => {
 //UPDATE donations
 export const updateDonation = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { donationId } = req.params;
     const { donorName, donations } = req.body;
-    const update = await Donation.findById(id);
+    const update = await Donation.findById(donationId);
 
     update.donorName = donorName;
     update.donation = donations;
@@ -75,15 +75,16 @@ export const updateDonation = async (req, res) => {
 //DELETE donation
 export const deleteDonation = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { donationId } = req.body;
+    const { id, donationId } = req.params;
     const user = await User.findById(id);
-
     if (!user || user.role !== "admin") {
       return res.status(403).json({ message: "Forbidden" });
     }
 
     await Donation.deleteOne({ _id: donationId });
+    const donationUser = await User.find({ donations: donationId });
+    donationUser[0].donations.pull(donationId);
+    await donationUser[0].save();
     res.status(200).redirect("/");
   } catch (error) {
     res.status(404).json({ message: error.message });
