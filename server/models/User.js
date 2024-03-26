@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema(
     },
     distributions: {
       type: [mongoose.Types.ObjectId],
-      ref: "Distribuion",
+      ref: "Distriubtion",
       default: [],
     },
   },
