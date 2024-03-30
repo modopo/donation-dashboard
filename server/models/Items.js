@@ -7,9 +7,6 @@ const ItemSchema = new mongoose.Schema({
     min: 2,
     max: 50,
   },
-  description: {
-    type: String,
-  },
   count: {
     type: Number,
     required: true,

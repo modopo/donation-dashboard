@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
 const MoneySchema = new mongoose.Schema({
-  donorName: {
-    type: String,
-    required: true,
-  },
   currencyType: {
     type: String,
     required: true,

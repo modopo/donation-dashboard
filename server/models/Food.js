@@ -1,14 +1,11 @@
 import mongoose from "mongoose";
 
-const FoodSchema = new mongoose.Scheme({
+const FoodSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     min: 2,
     max: 50,
-  },
-  description: {
-    type: String,
   },
   count: {
     type: Number,

@@ -1,5 +1,8 @@
 import User from "../models/User.js";
 import Donation from "../models/Donation.js";
+import Money from "../models/Money.js";
+import Food from "../models/Food.js";
+import Item from "../models/Items.js";
 
 //GET donations
 export const getStaffRecordedDonations = async (req, res) => {
@@ -38,7 +41,6 @@ export const addDonation = async (req, res) => {
   try {
     const { id } = req.params;
     const { donorName, donation } = req.body;
-    console.log(donation);
     const newDonation = new Donation({
       donorName: donorName,
       donation: [...donation],
@@ -49,6 +51,48 @@ export const addDonation = async (req, res) => {
     const user = await User.findById(id);
     user.donations.push(saved._id);
     await user.save();
+
+    for (let obj of donation) {
+      if (obj.type === "cash") {
+        bank[0].totalAmount += obj.quantity;
+        const doesExist = await Cash.find({ currencyType: obj.itemName });
+        if (!doesExist) {
+          const newCash = new Cash({
+            currencyType: obj.itemName,
+            totalAmount: obj.quantity,
+          });
+          await newCash.save();
+        } else {
+          doesExist[0].totalAmount += obj.quantity;
+          await doesExist[0].save();
+        }
+      } else if (obj.type === "food") {
+        const doesExist = await Food.find({ name: obj.itemName });
+        if (!doesExist) {
+          const newFood = new Food({
+            name: obj.itemName,
+            count: obj.quantity,
+          });
+          await newFood.save();
+        } else {
+          doesExist[0].count += obj.quantity;
+          await doesExist[0].save();
+        }
+      } else if (obj.type === "item") {
+        const doesExist = await Item.find({ name: obj.itemName });
+        if (!doesExist) {
+          const newItem = new Item({
+            name: obj.itemName,
+            count: obj.quantity,
+          });
+          await newItem.save();
+        } else {
+          doesExist[0].count += obj.quantity;
+          await doesExist[0].save();
+        }
+      }
+    }
+
     res.status(201).json(saved);
   } catch (error) {
     res.status(409).json({ message: error.messsage });
