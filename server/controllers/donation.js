@@ -54,7 +54,6 @@ export const addDonation = async (req, res) => {
 
     for (let obj of donation) {
       if (obj.type === "cash") {
-        bank[0].totalAmount += obj.quantity;
         const doesExist = await Cash.find({ currencyType: obj.itemName });
         if (!doesExist) {
           const newCash = new Cash({
