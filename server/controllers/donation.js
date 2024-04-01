@@ -1,5 +1,8 @@
 import User from "../models/User.js";
 import Donation from "../models/Donation.js";
+import Money from "../models/Money.js";
+import Food from "../models/Food.js";
+import Item from "../models/Items.js";
 
 //GET donations
 export const getStaffRecordedDonations = async (req, res) => {
@@ -38,7 +41,6 @@ export const addDonation = async (req, res) => {
   try {
     const { id } = req.params;
     const { donorName, donation } = req.body;
-    console.log(donation);
     const newDonation = new Donation({
       donorName: donorName,
       donation: [...donation],
@@ -49,6 +51,50 @@ export const addDonation = async (req, res) => {
     const user = await User.findById(id);
     user.donations.push(saved._id);
     await user.save();
+
+    for (let obj of donation) {
+      console.log(obj.type);
+      if (obj.type === "cash") {
+        console.log("before find");
+        const doesExist = await Money.find({ currencyType: obj.itemName });
+        console.log("result of doesExist: ", doesExist);
+        if (!doesExist.length) {
+          const newCash = new Money({
+            currencyType: obj.itemName,
+            totalAmount: obj.quantity,
+          });
+          await newCash.save();
+        } else {
+          doesExist[0].totalAmount += obj.quantity;
+          await doesExist[0].save();
+        }
+      } else if (obj.type === "food") {
+        const doesExist = await Food.find({ name: obj.itemName });
+        if (!doesExist.length) {
+          const newFood = new Food({
+            name: obj.itemName,
+            count: obj.quantity,
+          });
+          await newFood.save();
+        } else {
+          doesExist[0].count += obj.quantity;
+          await doesExist[0].save();
+        }
+      } else if (obj.type === "item") {
+        const doesExist = await Item.find({ name: obj.itemName });
+        if (!doesExist.length) {
+          const newItem = new Item({
+            name: obj.itemName,
+            count: obj.quantity,
+          });
+          await newItem.save();
+        } else {
+          doesExist[0].count += obj.quantity;
+          await doesExist[0].save();
+        }
+      }
+    }
+
     res.status(201).json(saved);
   } catch (error) {
     res.status(409).json({ message: error.messsage });
