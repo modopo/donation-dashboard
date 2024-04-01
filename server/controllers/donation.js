@@ -53,10 +53,13 @@ export const addDonation = async (req, res) => {
     await user.save();
 
     for (let obj of donation) {
+      console.log(obj.type);
       if (obj.type === "cash") {
-        const doesExist = await Cash.find({ currencyType: obj.itemName });
-        if (!doesExist) {
-          const newCash = new Cash({
+        console.log("before find");
+        const doesExist = await Money.find({ currencyType: obj.itemName });
+        console.log("result of doesExist: ", doesExist);
+        if (!doesExist.length) {
+          const newCash = new Money({
             currencyType: obj.itemName,
             totalAmount: obj.quantity,
           });
@@ -67,7 +70,7 @@ export const addDonation = async (req, res) => {
         }
       } else if (obj.type === "food") {
         const doesExist = await Food.find({ name: obj.itemName });
-        if (!doesExist) {
+        if (!doesExist.length) {
           const newFood = new Food({
             name: obj.itemName,
             count: obj.quantity,
@@ -79,7 +82,7 @@ export const addDonation = async (req, res) => {
         }
       } else if (obj.type === "item") {
         const doesExist = await Item.find({ name: obj.itemName });
-        if (!doesExist) {
+        if (!doesExist.length) {
           const newItem = new Item({
             name: obj.itemName,
             count: obj.quantity,
