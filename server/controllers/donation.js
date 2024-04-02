@@ -53,11 +53,8 @@ export const addDonation = async (req, res) => {
     await user.save();
 
     for (let obj of donation) {
-      console.log(obj.type);
       if (obj.type === "cash") {
-        console.log("before find");
         const doesExist = await Money.find({ currencyType: obj.itemName });
-        console.log("result of doesExist: ", doesExist);
         if (!doesExist.length) {
           const newCash = new Money({
             currencyType: obj.itemName,
@@ -108,10 +105,29 @@ export const updateDonation = async (req, res) => {
     const { donorName, donations } = req.body;
     const update = await Donation.findById(donationId);
 
+    for (let obj in donations) {
+      let existing = null;
+      if (obj.type === "cash") {
+        existing = await Money.find({ currencyType: obj.itemName });
+      } else if (obj.type === "item") {
+        existing = await Item.find({ name: obj.itemName });
+      } else if (obj.type === "food") {
+        existing = await Food.find({ name: obj.itemName });
+      }
+
+      if (existing) {
+        if (existing[0].quantity > obj.quantity) {
+          existing[0].quantity -= existing[0].quantity - obj.quantity;
+        } else if (existing[0].quantity < obj.quantity) {
+          existing[0].quantity += obj.quantity - existing[0].quantity;
+        }
+        await existing.save();
+      }
+    }
+
     update.donorName = donorName;
     update.donation = donations;
     await update.save();
-
     res.status(200).json(update);
   } catch (error) {
     res.status(404).json({ message: error.message });
