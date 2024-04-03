@@ -7,7 +7,7 @@ const FoodSchema = new mongoose.Schema({
     min: 2,
     max: 50,
   },
-  count: {
+  quantity: {
     type: Number,
     required: true,
   },

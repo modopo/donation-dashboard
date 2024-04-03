@@ -53,45 +53,37 @@ export const addDonation = async (req, res) => {
     await user.save();
 
     for (let obj of donation) {
-      console.log(obj.type);
-      if (obj.type === "cash") {
-        console.log("before find");
-        const doesExist = await Money.find({ currencyType: obj.itemName });
-        console.log("result of doesExist: ", doesExist);
-        if (!doesExist.length) {
-          const newCash = new Money({
-            currencyType: obj.itemName,
-            totalAmount: obj.quantity,
-          });
-          await newCash.save();
-        } else {
-          doesExist[0].totalAmount += obj.quantity;
-          await doesExist[0].save();
-        }
-      } else if (obj.type === "food") {
-        const doesExist = await Food.find({ name: obj.itemName });
-        if (!doesExist.length) {
-          const newFood = new Food({
-            name: obj.itemName,
-            count: obj.quantity,
-          });
-          await newFood.save();
-        } else {
-          doesExist[0].count += obj.quantity;
-          await doesExist[0].save();
-        }
-      } else if (obj.type === "item") {
-        const doesExist = await Item.find({ name: obj.itemName });
-        if (!doesExist.length) {
-          const newItem = new Item({
-            name: obj.itemName,
-            count: obj.quantity,
-          });
-          await newItem.save();
-        } else {
-          doesExist[0].count += obj.quantity;
-          await doesExist[0].save();
-        }
+      let Model = null;
+      let query = { name: obj.itemName };
+
+      switch (obj.type) {
+        case "cash":
+          Model = Money;
+          query = { currencyType: obj.itemName };
+          break;
+        case "food":
+          Model = Food;
+          query = { name: obj.itemName };
+          break;
+        case "item":
+          Model = Item;
+          query = { name: obj.itemName };
+          break;
+        default:
+          break;
+      }
+
+      const doesExist = await Model.find(query);
+
+      if (!doesExist.length) {
+        const newModel = new Model({
+          ...query,
+          quantity: obj.quantity,
+        });
+        await newModel.save();
+      } else {
+        doesExist[0].quantity += obj.quantity;
+        await doesExist[0].save();
       }
     }
 
@@ -105,13 +97,33 @@ export const addDonation = async (req, res) => {
 export const updateDonation = async (req, res) => {
   try {
     const { donationId } = req.params;
-    const { donorName, donations } = req.body;
+    const { donorName, donation } = req.body;
     const update = await Donation.findById(donationId);
 
-    update.donorName = donorName;
-    update.donation = donations;
-    await update.save();
+    for (let obj of donation) {
+      let existing = null;
+      if (obj.type === "cash") {
+        existing = await Money.find({ currencyType: obj.itemName });
+      } else if (obj.type === "item") {
+        existing = await Item.find({ name: obj.itemName });
+      } else if (obj.type === "food") {
+        existing = await Food.find({ name: obj.itemName });
+      }
 
+      console.log("existing quantity: ", existing[0].quantity);
+      if (existing) {
+        if (existing[0].quantity > obj.quantity) {
+          existing[0].quantity -= existing[0].quantity - obj.quantity;
+        } else if (existing[0].quantity < obj.quantity) {
+          existing[0].quantity += obj.quantity - existing[0].quantity;
+        }
+        await existing[0].save();
+      }
+    }
+
+    update.donorName = donorName;
+    update.donation = donation;
+    await update.save();
     res.status(200).json(update);
   } catch (error) {
     res.status(404).json({ message: error.message });
