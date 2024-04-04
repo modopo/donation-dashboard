@@ -55,6 +55,7 @@ export const addDonation = async (req, res) => {
     for (let obj of donation) {
       let Model = null;
       let query = { name: obj.itemName };
+      console.log(obj);
 
       switch (obj.type) {
         case "cash":

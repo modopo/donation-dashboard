@@ -5,14 +5,14 @@ import {
   addDistribution,
   updateDistribution,
   deleteDistribution,
-} from "../controllers/distribution.js";
+} from "../controllers/distributions.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
 //READ
-router.get("/:id/distribution", verifyToken, getStaffRecordedDistributions);
-router.get("/:id/distributionList", verifyToken, getAllDistributions);
+router.get("/:id", verifyToken, getStaffRecordedDistributions);
+router.get("/:id/allDistribtuions", verifyToken, getAllDistributions);
 
 //POST
 router.post("/:id/addDistribution", verifyToken, addDistribution);

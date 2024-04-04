@@ -1,5 +1,8 @@
-import User from "../models/User";
-import Distribution from "../models/Distribution";
+import User from "../models/User.js";
+import Distribution from "../models/Distribution.js";
+import Money from "../models/Money.js";
+import Food from "../models/Food.js";
+import Item from "../models/Items.js";
 
 //GET Distribution
 export const getStaffRecordedDistributions = async (req, res) => {
@@ -40,14 +43,15 @@ export const addDistribution = async (req, res) => {
     const { id } = req.params;
     const { authorizedBy, distribution } = req.body;
     const newDistribution = new Distribution({
-      authorizedBy: authorizedBy,
+      authorized: authorizedBy,
       distribution: [...distribution],
     });
 
     const saved = await newDistribution.save();
 
     const user = await User.findById(id);
-    user.distribution.push(saved._id);
+    console.log(user);
+    user.distributions.push(saved._id);
     await user.save();
 
     for (let obj of distribution) {
