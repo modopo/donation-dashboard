@@ -50,10 +50,10 @@ export const addDistribution = async (req, res) => {
     const saved = await newDistribution.save();
 
     const user = await User.findById(id);
-    console.log(user);
     user.distributions.push(saved._id);
     await user.save();
 
+    const toUpdate = [];
     for (let obj of distribution) {
       let Model = null;
       let query = { name: obj.itemName };
@@ -77,16 +77,17 @@ export const addDistribution = async (req, res) => {
 
       const doesExist = await Model.find(query);
 
-      if (!doesExist.length) {
-        const newModel = new Model({
-          ...query,
-          quantity: obj.quantity,
-        });
-        await newModel.save();
+      if (!doesExist.length || doesExist[0].quantity < obj.quantity) {
+        res.status(409).json({ message: "Insufficient supply" });
+        return;
       } else {
-        doesExist[0].quantity -= obj.quantity;
-        await doesExist[0].save();
+        toUpdate.push([doesExist[0], obj]);
       }
+    }
+
+    for (let [existing, update] of toUpdate) {
+      existing.quantity -= update.quantity;
+      await existing.save();
     }
 
     res.status(201).json(saved);
