@@ -11,8 +11,8 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 //READ
-router.get("/:id/donations", verifyToken, getStaffRecordedDonations);
-router.get("/:id/donationList", verifyToken, getAllDonations);
+router.get("/:id", verifyToken, getStaffRecordedDonations);
+router.get("/:id/allDonations", verifyToken, getAllDonations);
 
 //POST
 router.post("/:id/addDonation", verifyToken, addDonation);

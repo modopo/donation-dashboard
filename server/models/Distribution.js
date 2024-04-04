@@ -1,17 +1,20 @@
 import mongoose from "mongoose";
 
-const DistributionSchema = new mongoose.Scheme(
+const DistributionSchema = new mongoose.Schema(
   {
     authorized: {
-      type: Stirng,
+      type: String,
       required: true,
       minlength: 2,
       maxlength: 50,
     },
     distribution: {
-      items: [
+      type: [
         {
-          enum: ["food", "cash", "items"],
+          type: {
+            type: String,
+            enum: ["food", "cash", "item"],
+          },
           itemName: String,
           quantity: Number,
         },

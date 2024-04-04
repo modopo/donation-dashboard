@@ -55,6 +55,7 @@ export const addDonation = async (req, res) => {
     for (let obj of donation) {
       let Model = null;
       let query = { name: obj.itemName };
+      console.log(obj);
 
       switch (obj.type) {
         case "cash":
@@ -110,7 +111,6 @@ export const updateDonation = async (req, res) => {
         existing = await Food.find({ name: obj.itemName });
       }
 
-      console.log("existing quantity: ", existing[0].quantity);
       if (existing) {
         if (existing[0].quantity > obj.quantity) {
           existing[0].quantity -= existing[0].quantity - obj.quantity;
