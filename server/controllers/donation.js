@@ -46,12 +46,6 @@ export const addDonation = async (req, res) => {
       donation: [...donation],
     });
 
-    const saved = await newDonation.save();
-
-    const user = await User.findById(id);
-    user.donations.push(saved._id);
-    await user.save();
-
     for (let obj of donation) {
       let Model = null;
       let query = { name: obj.itemName };
@@ -87,6 +81,12 @@ export const addDonation = async (req, res) => {
         await doesExist[0].save();
       }
     }
+
+    const saved = await newDonation.save();
+
+    const user = await User.findById(id);
+    user.donations.push(saved._id);
+    await user.save();
 
     res.status(201).json(saved);
   } catch (error) {
