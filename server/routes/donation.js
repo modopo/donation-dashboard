@@ -2,6 +2,7 @@ import express from "express";
 import {
   getStaffRecordedDonations,
   getAllDonations,
+  getDonationByDonator,
   addDonation,
   updateDonation,
   deleteDonation,
@@ -13,6 +14,7 @@ const router = express.Router();
 //READ
 router.get("/:id", verifyToken, getStaffRecordedDonations);
 router.get("/:id/allDonations", verifyToken, getAllDonations);
+router.get("/:id/donator", verifyToken, getDonationByDonator);
 
 //POST
 router.post("/:id/addDonation", verifyToken, addDonation);
