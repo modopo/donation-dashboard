@@ -47,12 +47,6 @@ export const addDistribution = async (req, res) => {
       distribution: [...distribution],
     });
 
-    const saved = await newDistribution.save();
-
-    const user = await User.findById(id);
-    user.distributions.push(saved._id);
-    await user.save();
-
     const toUpdate = [];
     for (let obj of distribution) {
       let Model = null;
@@ -78,8 +72,7 @@ export const addDistribution = async (req, res) => {
       const doesExist = await Model.find(query);
 
       if (!doesExist.length || doesExist[0].quantity < obj.quantity) {
-        res.status(409).json({ message: "Insufficient supply" });
-        return;
+        throw new Error("Insufficient stock");
       } else {
         toUpdate.push([doesExist[0], obj]);
       }
@@ -90,6 +83,11 @@ export const addDistribution = async (req, res) => {
       await existing.save();
     }
 
+    const saved = await newDistribution.save();
+
+    const user = await User.findById(id);
+    user.distributions.push(saved._id);
+    await user.save();
     res.status(201).json(saved);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -112,15 +110,15 @@ export const updateDistribution = async (req, res) => {
       } else if (obj.type === "food") {
         existing = await Food.find({ name: obj.itemName });
       }
-    }
 
-    if (existing) {
-      if (existing[0].quantity > obj.quantity) {
-        existing[0].quantity -= existing[0].quantity - obj.quantity;
-      } else if (existing[0].quantity < obj.quantity) {
-        existing[0].quantity += obj.quantity - existing[0].quantity;
+      if (existing) {
+        if (existing[0].quantity > obj.quantity) {
+          existing[0].quantity -= existing[0].quantity - obj.quantity;
+        } else if (existing[0].quantity < obj.quantity) {
+          existing[0].quantity += obj.quantity - existing[0].quantity;
+        }
+        await existing[0].save();
       }
-      await existing[0].save();
     }
 
     update.authorizedBy = authorizedBy;
