@@ -36,6 +36,20 @@ export const getAllDonations = async (req, res) => {
   }
 };
 
+export const getDonationByDonator = async (req, res) => {
+  try {
+    const { donator } = req.body;
+    const donations = await Donation.aggregate([
+      { $match: { donorName: donator } },
+      { $unwind: "$donation" },
+      { $group: { _id: "$donation.type", donations: { $push: "$$ROOT" } } },
+    ]);
+    res.status(200).json(donations);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 //POST donations
 export const addDonation = async (req, res) => {
   try {
