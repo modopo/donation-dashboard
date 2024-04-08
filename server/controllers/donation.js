@@ -8,11 +8,23 @@ import Item from "../models/Items.js";
 export const getStaffRecordedDonations = async (req, res) => {
   try {
     const { id } = req.params;
+    const { startDate, endDate } = req.body;
     const user = await User.findById(id);
+    const donations = null;
 
-    const donations = await Promise.all(
-      user.donations.map((id) => Donation.findById(id)),
-    );
+    if (!startDate && !endDate) {
+      donations = await Promise.all(
+        user.donations.map((id) => Donation.findById(id)),
+      );
+    } else {
+      donations = await Donation.find({
+        _id: id,
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      });
+    }
 
     res.status(200).json(donations);
   } catch (error) {
