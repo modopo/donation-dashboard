@@ -49,11 +49,11 @@ export const getAllDistributions = async (req, res) => {
   }
 };
 
-export const getAllDistributionByStaff = async (req, res) => {
+export const getDistributionByAuthorized = async (req, res) => {
   try {
-    const { staff } = req.body;
+    const { authorized } = req.body;
     const distributions = await Distribution.aggregate([
-      { $match: { authorizedBy: staff } },
+      { $match: { authorized: authorized } },
       { $unwind: "$distribution" },
       {
         $group: {

@@ -2,6 +2,7 @@ import express from "express";
 import {
   getStaffRecordedDistributions,
   getAllDistributions,
+  getDistributionByAuthorized,
   addDistribution,
   updateDistribution,
   deleteDistribution,
@@ -13,6 +14,7 @@ const router = express.Router();
 //READ
 router.get("/:id", verifyToken, getStaffRecordedDistributions);
 router.get("/:id/allDistribtuions", verifyToken, getAllDistributions);
+router.get("/:id/authorized", verifyToken, getDistributionByAuthorized);
 
 //POST
 router.post("/:id/addDistribution", verifyToken, addDistribution);
