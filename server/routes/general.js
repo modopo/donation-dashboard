@@ -10,9 +10,9 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 //READ
-router.get("/", verifyToken, getAllBanks);
-router.get("/food", verifyToken, getAllFood);
-router.get("/items", verifyToken, getAllItems);
-router.get("/money", verifyToken, getAllMoney);
+router.get("/:id", verifyToken, getAllBanks);
+router.get("/:id/food", verifyToken, getAllFood);
+router.get("/:id/items", verifyToken, getAllItems);
+router.get("/:id/money", verifyToken, getAllMoney);
 
 export default router;

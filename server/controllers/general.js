@@ -5,7 +5,7 @@ import Item from "../models/Items.js";
 //GET
 export const getAllBanks = async (req, res) => {
   try {
-    const [money, food, items] = Promise.all([
+    const [money, food, items] = await Promise.all([
       Money.find(),
       Food.find(),
       Item.find(),
