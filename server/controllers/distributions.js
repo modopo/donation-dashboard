@@ -8,11 +8,23 @@ import Item from "../models/Items.js";
 export const getStaffRecordedDistributions = async (req, res) => {
   try {
     const { id } = req.params;
+    const { startDate, endDate } = req.body;
     const user = await User.findById(id);
+    const distributions = null;
 
-    const distributions = await Promise.all(
-      user.distributions.map((id) => Distribution.findById(id)),
-    );
+    if (!startDate && !endDate) {
+      distributions = await Promise.all(
+        user.distributions.map((id) => Distribution.findById(id)),
+      );
+    } else {
+      distributions = await Distribution.find({
+        _id: id,
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      });
+    }
 
     res.status(200).json(distributions);
   } catch (error) {
@@ -31,6 +43,25 @@ export const getAllDistributions = async (req, res) => {
     }
 
     const distributions = await Distribution.find();
+    res.status(200).json(distributions);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getDistributionByAuthorized = async (req, res) => {
+  try {
+    const { authorized } = req.body;
+    const distributions = await Distribution.aggregate([
+      { $match: { authorized: authorized } },
+      { $unwind: "$distribution" },
+      {
+        $group: {
+          _id: "$distribution.type",
+          distributions: { $push: "$$ROOT" },
+        },
+      },
+    ]);
     res.status(200).json(distributions);
   } catch (error) {
     res.status(404).json({ message: error.message });
