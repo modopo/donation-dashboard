@@ -1,4 +1,4 @@
-import { CssBaseline, ThemeProivder } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -11,9 +11,9 @@ function App() {
   return (
     <div className="app">
       <BrowserRouter>
-        <ThemeProivder theme={theme}>
+        <ThemeProvider theme={theme}>
           <CssBaseline />
-        </ThemeProivder>
+        </ThemeProvider>
       </BrowserRouter>
     </div>
   );
