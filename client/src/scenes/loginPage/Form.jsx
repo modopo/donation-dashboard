@@ -12,6 +12,7 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
+import { api } from "state/api";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -52,14 +53,10 @@ const Form = () => {
       formData.append(value, values[value]);
     }
 
-    const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
-    const savedUser = await savedUserResponse.json();
+    const [registerUser] = api.useRegisterUserMutation();
+    const registerResponse = registerUser(formData);
+
+    const savedUser = await registerResponse.json();
     onSubmitProps.resetForm();
 
     if (savedUser) {
@@ -68,11 +65,13 @@ const Form = () => {
   };
 
   const login = async (values, onSubmitProps) => {
-    const loginResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
+    const formData = new FormData();
+    for (let key in values) {
+      formData.append(key, values[key]);
+    }
+
+    const [loginUser] = api.useLoginUserMutation();
+    const loginResponse = loginUser(formData);
 
     const loggedIn = await loginResponse.json();
     onSubmitProps.resetFor();
