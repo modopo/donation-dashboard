@@ -51,14 +51,8 @@ const Form = () => {
   const [registerUser] = api.useRegisterUserMutation();
 
   const register = async (values, onSubmitProps) => {
-    const formData = new FormData();
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-
     try {
-      const registerResponse = await registerUser(formData).unwrap();
-      console.log(registerResponse);
+      const registerResponse = await registerUser(values);
       onSubmitProps.resetForm();
 
       if (registerResponse) {
@@ -76,22 +70,26 @@ const Form = () => {
 
   const login = async (values, onSubmitProps) => {
     const formData = new FormData();
-    for (let key in values) {
-      formData.append(key, values[key]);
+    for (let value in values) {
+      formData.append(value, values[value]);
     }
 
-    const loginResponse = loginUser(formData);
-    const loggedIn = await loginResponse.json();
-
-    onSubmitProps.resetForm();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        }),
-      );
-      navigate("/");
+    try {
+      const loginResponse = await loginUser(values);
+      onSubmitProps.resetForm();
+      if (!loginResponse.hasOwnProperty("error")) {
+        dispatch(
+          setLogin({
+            user: loginResponse.data.objUser._id,
+            token: loginResponse.data.token,
+          }),
+        );
+        navigate("/test");
+      } else {
+        alert(loginResponse.error.data.msg);
+      }
+    } catch (error) {
+      console.error("Error: ", error);
     }
   };
 
