@@ -12,6 +12,7 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
+import { api } from "state/api";
 
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
@@ -46,44 +47,49 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  const [loginUser] = api.useLoginUserMutation();
+  const [registerUser] = api.useRegisterUserMutation();
+
   const register = async (values, onSubmitProps) => {
+    try {
+      const registerResponse = await registerUser(values);
+      onSubmitProps.resetForm();
+
+      if (registerResponse) {
+        setPageType("login");
+      }
+    } catch (error) {
+      if (error.data === "Already registered") {
+        alert("Account with this email already exist. Please login instead");
+        setPageType("login");
+      } else {
+        console.error("Error: ", error);
+      }
+    }
+  };
+
+  const login = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
 
-    const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
-
-    if (savedUser) {
-      setPageType("login");
-    }
-  };
-
-  const login = async (values, onSubmitProps) => {
-    const loginResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-
-    const loggedIn = await loginResponse.json();
-    onSubmitProps.resetFor();
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        }),
-      );
-      navigate("/home");
+    try {
+      const loginResponse = await loginUser(values);
+      onSubmitProps.resetForm();
+      if (!loginResponse.hasOwnProperty("error")) {
+        dispatch(
+          setLogin({
+            user: loginResponse.data.objUser._id,
+            token: loginResponse.data.token,
+          }),
+        );
+        navigate("/test");
+      } else {
+        alert(loginResponse.error.data.msg);
+      }
+    } catch (error) {
+      console.error("Error: ", error);
     }
   };
 
