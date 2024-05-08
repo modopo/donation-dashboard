@@ -47,20 +47,30 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  const [loginUser] = api.useLoginUserMutation();
+  const [registerUser] = api.useRegisterUserMutation();
+
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
 
-    const [registerUser] = api.useRegisterUserMutation();
-    const registerResponse = registerUser(formData);
+    try {
+      const registerResponse = await registerUser(formData).unwrap();
+      console.log(registerResponse);
+      onSubmitProps.resetForm();
 
-    const savedUser = await registerResponse.json();
-    onSubmitProps.resetForm();
-
-    if (savedUser) {
-      setPageType("login");
+      if (registerResponse) {
+        setPageType("login");
+      }
+    } catch (error) {
+      if (error.data === "Already registered") {
+        alert("Account with this email already exist. Please login instead");
+        setPageType("login");
+      } else {
+        console.error("Error: ", error);
+      }
     }
   };
 
@@ -70,11 +80,10 @@ const Form = () => {
       formData.append(key, values[key]);
     }
 
-    const [loginUser] = api.useLoginUserMutation();
     const loginResponse = loginUser(formData);
-
     const loggedIn = await loginResponse.json();
-    onSubmitProps.resetFor();
+
+    onSubmitProps.resetForm();
     if (loggedIn) {
       dispatch(
         setLogin({
@@ -82,7 +91,7 @@ const Form = () => {
           token: loggedIn.token,
         }),
       );
-      navigate("/home");
+      navigate("/");
     }
   };
 
