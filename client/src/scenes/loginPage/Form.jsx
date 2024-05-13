@@ -80,11 +80,11 @@ const Form = () => {
       if (!loginResponse.hasOwnProperty("error")) {
         dispatch(
           setLogin({
-            user: loginResponse.data.objUser._id,
+            user: loginResponse.data.userObj._id,
             token: loginResponse.data.token,
           }),
         );
-        navigate("/test");
+        navigate("/dashboard");
       } else {
         alert(loginResponse.error.data.msg);
       }
