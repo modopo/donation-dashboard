@@ -48,7 +48,7 @@ app.post("/auth/register", upload.single("picture"), register);
 
 //Routes
 app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
+app.use("/user", userRoutes);
 app.use("/general", generalRoutes);
 app.use("/donations", donationsRoutes);
 app.use("/distributions", distributionsRoutes);
