@@ -92,6 +92,7 @@ const navItems = [
 ];
 
 const Sidebar = ({
+  user,
   drawerWidth,
   isSidebarOpen,
   setIsSidebarOpen,
@@ -189,6 +190,36 @@ const Sidebar = ({
                 );
               })}
             </List>
+          </Box>
+          <Box position="absolute" bottom="2rem">
+            <Divider />
+            <FlexBetween
+              textTransform="none"
+              gap="1rem"
+              m="1.5rem 2rem 0rem 3rem"
+            >
+              <Box textAlign="left">
+                <Typography
+                  fontWeight="bold"
+                  fontsize="0.9"
+                  sx={{ color: theme.palette.secondary[100] }}
+                >
+                  {user.firstName}
+                </Typography>
+                <Typography
+                  fontsize="0.9"
+                  sx={{ color: theme.palette.secondary[200] }}
+                >
+                  {user.role}
+                </Typography>
+              </Box>
+              <SettingsOutlined
+                sx={{
+                  color: theme.palette.secondary[300],
+                  fontSize: "25px",
+                }}
+              />
+            </FlexBetween>
           </Box>
         </Drawer>
       )}
