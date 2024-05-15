@@ -13,7 +13,7 @@ export const api = createApi({
     },
   }),
   reducerPath: "adminApi",
-  tagTypes: ["User", "Register", "Login"],
+  tagTypes: ["User", "Register", "Login", "Food", "Items", "Money"],
   endpoints: (build) => ({
     registerUser: build.mutation({
       query: (userData) => ({
@@ -35,6 +35,18 @@ export const api = createApi({
       query: (id) => `user/${id}`,
       providesTags: ["User"],
     }),
+    getFood: build.query({
+      query: (id) => `general/${id}/food`,
+      providesTags: ["Food"],
+    }),
+    getItems: build.query({
+      query: (id) => `general/${id}/items`,
+      providesTags: ["Items"],
+    }),
+    getMoney: build.query({
+      query: (id) => `general/${id}/money`,
+      providesTags: ["Money"],
+    }),
   }),
 });
 
@@ -42,4 +54,7 @@ export const {
   useGetUserQuery,
   useLoginUserMutation,
   useRegisterUserMutation,
+  useGetFoodQuery,
+  useGetItemsQuery,
+  useGetMoneyQuery,
 } = api;
