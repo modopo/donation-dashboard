@@ -6,10 +6,11 @@ import { useSelector } from "react-redux";
 import { themeSettings } from "theme";
 import LoginPage from "scenes/loginPage";
 import Dashboard from "scenes/dashboard";
-import Layout from "scenes/dashboard";
+import Layout from "scenes/layout";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
+  const isLoggedIn = useSelector((state) => state.global.token !== null);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   return (
     <div className="app">
@@ -17,10 +18,23 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path="/" element={<LoginPage />} />
+            <Route
+              path="/"
+              element={
+                isLoggedIn ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <LoginPage />
+                )
+              }
+            />
             <Route element={<Layout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route
+                path="/dashboard"
+                element={
+                  isLoggedIn ? <Dashboard /> : <Navigate to="/" replace />
+                }
+              />
             </Route>
           </Routes>
         </ThemeProvider>
