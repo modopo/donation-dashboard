@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { themeSettings } from "theme";
 import LoginPage from "scenes/loginPage";
 import Dashboard from "scenes/dashboard";
+import Banks from "scenes/banks";
 import Layout from "scenes/layout";
 
 function App() {
@@ -28,13 +29,12 @@ function App() {
                 )
               }
             />
-            <Route element={<Layout />}>
-              <Route
-                path="/dashboard"
-                element={
-                  isLoggedIn ? <Dashboard /> : <Navigate to="/" replace />
-                }
-              />
+            <Route
+              element={isLoggedIn ? <Layout /> : <Navigate to="/" replace />}
+            >
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/banks" element={<Banks />} />
             </Route>
           </Routes>
         </ThemeProvider>

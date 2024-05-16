@@ -17,6 +17,7 @@ import {
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
+  AccountBalanceOutlined,
   ShoppingCartOutlined,
   Groups2Outlined,
   ReceiptLongOutlined,
@@ -42,8 +43,8 @@ const navItems = [
     icon: null,
   },
   {
-    text: "Products",
-    icon: <ShoppingCartOutlined />,
+    text: "Banks",
+    icon: <AccountBalanceOutlined />,
   },
   {
     text: "Customers",
