@@ -6,18 +6,14 @@ import {
   CardContent,
   Collapse,
   Button,
-  Typograpny,
+  Typography,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
 import Header from "components/Header";
 import { useGetFoodQuery, useGetItemsQuery, useGetMoneyQuery } from "state/api";
 
-const Item = ({
-  _id,
-  name,
-  quantity,
-}) => {
+const Item = ({ _id, name, quantity }) => {
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -26,11 +22,15 @@ const Item = ({
       sx={{
         backgroundImage: "none",
         backgroundColor: theme.palette.background.alt,
-        borderRadius: "0.55rem"
+        borderRadius: "0.55rem",
       }}
     >
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color={theme.palette.secondary[700]} gutterBottom>
+        <Typography
+          sx={{ fontSize: 14 }}
+          color={theme.palette.secondary[700]}
+          gutterBottom
+        >
           {name}
         </Typography>
         <Typography variant="h5" component="div">
@@ -54,18 +54,18 @@ const Item = ({
         timeout="auto"
         unmountOnExit
         sx={{
-          color: theme.palette.neutral[300]
+          color: theme.palette.neutral[300],
         }}
       >
         <CardContent>
-          <Typograph>id: {_id}</Typograph>
-          <Typograph>id: {_id}</Typograph>
-          <Typograph>id: {_id}</Typograph>
+          <Typography>id: {_id}</Typography>
+          <Typography>id: {_id}</Typography>
+          <Typography>id: {_id}</Typography>
         </CardContent>
       </Collapse>
     </Card>
-  )
-}
+  );
+};
 
 const Banks = () => {
   const { data, isLoading } = useGetFoodQuery();
@@ -83,15 +83,15 @@ const Banks = () => {
           rowGap="20px"
           columnGap="1.33%"
           sx={{
-            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" }
+            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
           }}
         >
-          {data.map() => (
-            
-          )}
+          {data.map(({ _id, name, quantity }) => (
+            <Item _id={_id} name={name} quantity={quantity} />
+          ))}
         </Box>
       ) : (
-        <></>
+        <>Loading...</>
       )}
     </Box>
   );
