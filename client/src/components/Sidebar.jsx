@@ -18,7 +18,6 @@ import {
   ChevronRightOutlined,
   HomeOutlined,
   AccountBalanceOutlined,
-  ShoppingCartOutlined,
   Groups2Outlined,
   ReceiptLongOutlined,
   PublicOutlined,
@@ -202,13 +201,13 @@ const Sidebar = ({
               <Box textAlign="left">
                 <Typography
                   fontWeight="bold"
-                  fontsize="0.9"
+                  fontSize="0.9"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
                   {user.firstName}
                 </Typography>
                 <Typography
-                  fontsize="0.9"
+                  fontSize="0.9"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
                   {user.role}
