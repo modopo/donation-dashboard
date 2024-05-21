@@ -17,7 +17,7 @@ import {
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
-  ShoppingCartOutlined,
+  AccountBalanceOutlined,
   Groups2Outlined,
   ReceiptLongOutlined,
   PublicOutlined,
@@ -42,8 +42,8 @@ const navItems = [
     icon: null,
   },
   {
-    text: "Products",
-    icon: <ShoppingCartOutlined />,
+    text: "Banks",
+    icon: <AccountBalanceOutlined />,
   },
   {
     text: "Customers",
@@ -201,13 +201,13 @@ const Sidebar = ({
               <Box textAlign="left">
                 <Typography
                   fontWeight="bold"
-                  fontsize="0.9"
+                  fontSize="0.9"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
                   {user.firstName}
                 </Typography>
                 <Typography
-                  fontsize="0.9"
+                  fontSize="0.9"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
                   {user.role}
