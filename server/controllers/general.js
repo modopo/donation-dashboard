@@ -45,7 +45,6 @@ export const getAllMoney = async (req, res) => {
   try {
     const money = await Money.find();
     res.status(200).json(money);
-    L;
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
