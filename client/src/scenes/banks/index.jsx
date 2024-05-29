@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import Header from "components/Header";
 import { useSelector } from "react-redux";
-import { useGetFoodQuery, useGetItemsQuery, useGetMoneyQuery } from "state/api";
+import { useGetBankDataQuery } from "state/api";
 
 const Item = ({ _id, name, quantity }) => {
   const theme = useTheme();
@@ -93,27 +93,11 @@ const BankSelect = ({ onBankSelect }) => {
         >
           <MenuItem value={"Food"}>Food</MenuItem>
           <MenuItem value={"Items"}>Items</MenuItem>
-          <MenuItem value={"Cash"}>Cash</MenuItem>
+          <MenuItem value={"Money"}>Cash</MenuItem>
         </Select>
       </FormControl>
     </Box>
   );
-};
-
-const useFetchData = (bank) => {
-  if (bank === "Food") {
-    console.log("FOOD");
-    return useGetFoodQuery;
-  } else if (bank === "Cash") {
-    console.log("CASH");
-    return useGetMoneyQuery;
-  } else if (bank === "Items") {
-    console.log("ITEMS");
-    return useGetItemsQuery;
-  } else {
-    console.log("NOTHING");
-    return { data: null, isLoading: true };
-  }
 };
 
 const Banks = () => {
@@ -125,13 +109,12 @@ const Banks = () => {
     setBank(selectedBank);
   };
 
-  const { data, isLoading } = useFetchData(bank)(userId);
+  const { data, isLoading } = useGetBankDataQuery({ userId, bank });
 
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="Banks" subtitle="See list of quantity in bank. " />
       <BankSelect onBankSelect={handleBankSelect} />
-      {console.log("DATA after select: ", data)}
       {data || !isLoading ? (
         <Box
           mt="20px"
@@ -145,7 +128,7 @@ const Banks = () => {
           }}
         >
           {data.map(({ _id, name, quantity }) => (
-            <Item id={_id} _id={_id} name={name} quantity={quantity} />
+            <Item key={_id} _id={_id} name={name} quantity={quantity} />
           ))}
         </Box>
       ) : (
