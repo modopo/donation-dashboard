@@ -35,9 +35,9 @@ export const api = createApi({
       providesTags: ["User"],
     }),
     getBankData: build.query({
-      query: ({ id, bank }) => {
-        console.log(id, bank);
-        return `general/${id}/${bank}`;
+      query: ({ userId, bank }) => {
+        console.log(userId, bank);
+        return `general/${userId}/${bank}`;
       },
       providesTags: ["BankData"],
     }),
