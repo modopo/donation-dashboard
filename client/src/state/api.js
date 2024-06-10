@@ -12,7 +12,7 @@ export const api = createApi({
     },
   }),
   reducerPath: "adminApi",
-  tagTypes: ["User", "Register", "Login", "BankData"],
+  tagTypes: ["User", "Register", "Login", "BankData", "Donor"],
   endpoints: (build) => ({
     registerUser: build.mutation({
       query: (userData) => ({
@@ -30,13 +30,20 @@ export const api = createApi({
       }),
       providesTags: ["Login"],
     }),
+    getDonor: build.query({
+      query: ({ userId, donator }) => ({
+        url: `donations/${userId}/donator`,
+        method: "GET",
+        body: donator,
+      }),
+      providesTags: ["Donor"],
+    }),
     getUser: build.query({
-      query: (id) => `user/${id}`,
+      query: (userId) => `user/${userId}`,
       providesTags: ["User"],
     }),
     getBankData: build.query({
       query: ({ userId, bank }) => {
-        console.log(userId, bank);
         return `general/${userId}/${bank}`;
       },
       providesTags: ["BankData"],
@@ -49,4 +56,5 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useGetBankDataQuery,
+  useGetDonorQuery,
 } = api;

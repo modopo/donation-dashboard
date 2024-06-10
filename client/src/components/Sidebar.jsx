@@ -46,7 +46,7 @@ const navItems = [
     icon: <AccountBalanceOutlined />,
   },
   {
-    text: "Customers",
+    text: "Donors",
     icon: <Groups2Outlined />,
   },
   {

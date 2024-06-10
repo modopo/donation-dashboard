@@ -7,6 +7,7 @@ import { themeSettings } from "theme";
 import LoginPage from "scenes/loginPage";
 import Dashboard from "scenes/dashboard";
 import Banks from "scenes/banks";
+import Donors from "scenes/donor";
 import Layout from "scenes/layout";
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/banks" element={<Banks />} />
+              <Route path="/donors" element={<Donors />} />
             </Route>
           </Routes>
         </ThemeProvider>
