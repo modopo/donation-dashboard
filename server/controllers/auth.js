@@ -18,8 +18,11 @@ export const register = async (req, res) => {
       email,
       password: passHash,
     });
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    const savedUser = await newUser.save({ select: "-password" });
+    const userResponse = savedUser.toObject();
+    delete userResponse.password;
+
+    res.status(201).json(userResponse);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
