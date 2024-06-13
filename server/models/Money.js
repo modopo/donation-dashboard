@@ -9,6 +9,7 @@ const MoneySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  { timestamps: true },
 });
 
 const Money = mongoose.model("Money", MoneySchema);

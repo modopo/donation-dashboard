@@ -12,7 +12,15 @@ export const api = createApi({
     },
   }),
   reducerPath: "adminApi",
-  tagTypes: ["User", "Register", "Login", "BankData", "Donor"],
+  tagTypes: [
+    "User",
+    "Register",
+    "Login",
+    "BankData",
+    "Donor",
+    "RecordedDonations",
+    "AllDonations",
+  ],
   endpoints: (build) => ({
     registerUser: build.mutation({
       query: (userData) => ({
@@ -30,14 +38,6 @@ export const api = createApi({
       }),
       providesTags: ["Login"],
     }),
-    getDonor: build.query({
-      query: ({ userId, donator }) => ({
-        url: `donations/${userId}/donator`,
-        method: "GET",
-        body: donator,
-      }),
-      providesTags: ["Donor"],
-    }),
     getUser: build.query({
       query: (userId) => `user/${userId}`,
       providesTags: ["User"],
@@ -48,6 +48,22 @@ export const api = createApi({
       },
       providesTags: ["BankData"],
     }),
+    getDonor: build.query({
+      query: ({ userId, donator }) => ({
+        url: `donations/${userId}/donator`,
+        method: "GET",
+        body: donator,
+      }),
+      providesTags: ["Donor"],
+    }),
+    getUserRecordedDonations: build.query({
+      query: (userId) => `donations/${userId}`,
+      providesTags: ["RecordedDonations"],
+    }),
+    getAllDonations: build.query({
+      query: (userId) => `donations/${userId}/allDonations`,
+      providesTags: ["AllDonations"],
+    }),
   }),
 });
 
@@ -57,4 +73,6 @@ export const {
   useRegisterUserMutation,
   useGetBankDataQuery,
   useGetDonorQuery,
+  useGetUserRecordedDonationsQuery,
+  useGetAllDonationsQuery,
 } = api;

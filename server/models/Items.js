@@ -11,6 +11,7 @@ const ItemSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  { timestamps: true },
 });
 
 const Item = mongoose.model("Item", ItemSchema);

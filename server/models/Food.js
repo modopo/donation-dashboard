@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+let 
+
 
 const FoodSchema = new mongoose.Schema({
   name: {
@@ -11,6 +13,7 @@ const FoodSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  { timestamps: true },
 });
 
 const Food = mongoose.model("Food", FoodSchema);
