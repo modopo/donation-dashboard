@@ -66,16 +66,17 @@ export const getDonationByDonator = async (req, res) => {
 export const addDonation = async (req, res) => {
   try {
     const { id } = req.params;
-    const { donorName, donation } = req.body;
+    const { donorName, email, phoneNumber, donation } = req.body;
     const newDonation = new Donation({
       donorName: donorName,
+      email: email,
+      phoneNumber: phoneNumber,
       donation: [...donation],
     });
 
     for (let obj of donation) {
       let Model = null;
       let query = { name: obj.itemName };
-      console.log(obj);
 
       switch (obj.type) {
         case "cash":
